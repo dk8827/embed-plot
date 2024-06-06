@@ -14,7 +14,7 @@ if 'About' not in df.columns or 'Title' not in df.columns:
 df['About'].fillna('', inplace=True)
 
 # Filter rows by minimal number of votes
-df_filtered = df[df['Votes'] >= 500000]
+df_filtered = df[df['Votes'] >= 300000]
 
 # Perform text embedding using TF-IDF vectorizer
 vectorizer = TfidfVectorizer()
