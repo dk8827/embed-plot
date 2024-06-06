@@ -4,7 +4,9 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
-from collections import Counter
+
+from sklearn.manifold import TSNE
+
 
 # Load the CSV file
 df = pd.read_csv('imdb_tvshows.csv')
@@ -25,10 +27,9 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 # Perform text embedding using the sentence transformer model
 X = model.encode(df_filtered['About'].tolist())
 
-# Reduce dimensionality to 2D using PCA
-pca = PCA(n_components=2)
-X_reduced = pca.fit_transform(X)
-
+# Reduce dimensionality to 2D
+tsne = TSNE(n_components=2, random_state=42)
+X_reduced = tsne.fit_transform(X)
 # Perform KMeans clustering on the reduced dimensions
 kmeans = KMeans(n_clusters=5, random_state=42)  # You can change the number of clusters
 clusters = kmeans.fit_predict(X_reduced)
