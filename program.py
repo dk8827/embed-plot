@@ -54,13 +54,13 @@ for cluster_num in range(kmeans.n_clusters):
 
 # Plot the series names on a 2D map with cluster names
 plt.figure(figsize=(20, 12))
-colors = ['C0', 'C1', 'C2', 'C3', 'C4']  # Adjust based on the number of clusters
+colors = [f'C{i}' for i in range(kmeans.n_clusters)]
 for cluster_num in range(kmeans.n_clusters):
     cluster_indices = (clusters == cluster_num)
     cluster_points = X_reduced[cluster_indices]
     plt.scatter(cluster_points[:, 0], cluster_points[:, 1], c=colors[cluster_num], label=cluster_names[cluster_num])
     for i, series_name in enumerate(df_filtered.loc[cluster_indices, 'Title']):
-        plt.text(cluster_points[i, 0] + 0.01, cluster_points[i, 1] + 0.01, series_name, fontsize=9)
+        plt.text(cluster_points[i, 0] + 0.01, cluster_points[i, 1] + 0.01, series_name, fontsize=12)
 plt.xlabel('PCA Component 1')
 plt.ylabel('PCA Component 2')
 plt.title('TV Series Embeddings in 2D Space with Clustering and Names')
