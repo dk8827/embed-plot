@@ -7,6 +7,7 @@ from sklearn.manifold import TSNE
 from sklearn.metrics.pairwise import cosine_distances
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.spatial import ConvexHull
 
 # Load the CSV file
 df = pd.read_csv('imdb_tvshows.csv')
@@ -65,12 +66,18 @@ for cluster_num in range(kmeans.n_clusters):
     plt.scatter(cluster_points[:, 0], cluster_points[:, 1], c=colors[cluster_num], label=cluster_names[cluster_num])
     for i, series_name in enumerate(df_filtered.loc[cluster_indices, 'Title']):
         plt.text(cluster_points[i, 0] + 0.01, cluster_points[i, 1] + 0.01, series_name, fontsize=12)
-plt.xlabel('PCA Component 1')
-plt.ylabel('PCA Component 2')
+
+    # Draw convex hull around the cluster points
+    if len(cluster_points) > 2:  # Convex hull requires at least 3 points
+        hull = ConvexHull(cluster_points)
+        for simplex in hull.simplices:
+            plt.plot(cluster_points[simplex, 0], cluster_points[simplex, 1], colors[cluster_num])
+
+plt.xlabel('TSNE Component 1')
+plt.ylabel('TSNE Component 2')
 plt.title('TV Series Embeddings in 2D Space with Clustering and Names')
 plt.legend()
 plt.grid(True)
-
 
 # Compute and log cosine distances
 distances = cosine_distances(X)
