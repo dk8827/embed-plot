@@ -16,10 +16,10 @@ if 'About' not in df.columns or 'Title' not in df.columns:
     raise ValueError("CSV must contain 'About' and 'Title' columns")
 
 # Fill missing values in the 'About' column with an empty string
-df['About'].fillna('', inplace=True)
+df['About'] = df['About'].fillna('')
 
 # Filter rows by minimal number of votes
-df_filtered = df[df['Votes'] >= 200000]
+df_filtered = df[df['Votes'] >= 200000].copy()
 
 # Load the sentence transformer model
 model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -34,7 +34,7 @@ X_reduced = tsne.fit_transform(X)
 NUMBER_OF_CLUSTERS = 5
 
 # Perform KMeans clustering on the reduced dimensions
-kmeans = KMeans(n_clusters=NUMBER_OF_CLUSTERS, random_state=42) 
+kmeans = KMeans(n_clusters=NUMBER_OF_CLUSTERS, random_state=42, n_init=10)
 clusters = kmeans.fit_predict(X_reduced)
 
 # Assign cluster labels to the dataframe
@@ -70,9 +70,7 @@ plt.ylabel('PCA Component 2')
 plt.title('TV Series Embeddings in 2D Space with Clustering and Names')
 plt.legend()
 plt.grid(True)
-plt.ion()  # Turn on interactive mode
-plt.show()
-plt.pause(0.001)  # Allow the plot to display without blocking
+
 
 # Compute and log cosine distances
 distances = cosine_distances(X)
@@ -87,7 +85,7 @@ for i in range(len(titles)):
 # Sort by decreasing distance (closest first)
 distance_tuples.sort(key=lambda x: x[2])
 
-#take only the top pairs
+# Take only the top pairs
 distance_tuples = distance_tuples[:50]
 
 # Log the distances
