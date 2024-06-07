@@ -3,10 +3,10 @@ from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-import matplotlib.pyplot as plt
-
 from sklearn.manifold import TSNE
-
+from sklearn.metrics.pairwise import cosine_distances
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Load the CSV file
 df = pd.read_csv('imdb_tvshows.csv')
@@ -70,4 +70,31 @@ plt.ylabel('PCA Component 2')
 plt.title('TV Series Embeddings in 2D Space with Clustering and Names')
 plt.legend()
 plt.grid(True)
+plt.ion()  # Turn on interactive mode
 plt.show()
+plt.pause(0.001)  # Allow the plot to display without blocking
+
+# Compute and log cosine distances
+distances = cosine_distances(X)
+titles = df_filtered['Title'].tolist()
+abouts = df_filtered['About'].tolist()
+distance_tuples = []
+
+for i in range(len(titles)):
+    for j in range(i + 1, len(titles)):
+        distance_tuples.append((titles[i], titles[j], distances[i, j], abouts[i], abouts[j]))
+
+# Sort by decreasing distance (closest first)
+distance_tuples.sort(key=lambda x: x[2])
+
+#take only the top pairs
+distance_tuples = distance_tuples[:50]
+
+# Log the distances
+for seriesA, seriesB, distance, aboutA, aboutB in distance_tuples:
+    print(f"Distance between '{seriesA}' and '{seriesB}': {distance:.4f}")
+    print(f"'{seriesA}' About: {aboutA}")
+    print(f"'{seriesB}' About: {aboutB}")
+    print()
+
+plt.show(block=True)  # Keep the plot open at the end of the script
