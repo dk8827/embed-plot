@@ -85,8 +85,8 @@ for i in range(len(titles)):
 # Sort by decreasing distance (closest first)
 distance_tuples.sort(key=lambda x: x[2])
 
-# Take only the top pairs
-distance_tuples = distance_tuples[:50]
+# Take only the top 20 pairs and bottom 20 pairs
+distance_tuples = distance_tuples[:20] + distance_tuples[-20:]
 
 # Log the distances
 for seriesA, seriesB, distance, aboutA, aboutB in distance_tuples:
