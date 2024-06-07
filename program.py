@@ -30,8 +30,11 @@ X = model.encode(df_filtered['About'].tolist())
 # Reduce dimensionality to 2D
 tsne = TSNE(n_components=2, random_state=42)
 X_reduced = tsne.fit_transform(X)
+
+NUMBER_OF_CLUSTERS = 5
+
 # Perform KMeans clustering on the reduced dimensions
-kmeans = KMeans(n_clusters=5, random_state=42)  # You can change the number of clusters
+kmeans = KMeans(n_clusters=NUMBER_OF_CLUSTERS, random_state=42) 
 clusters = kmeans.fit_predict(X_reduced)
 
 # Assign cluster labels to the dataframe
